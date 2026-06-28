@@ -1,6 +1,6 @@
 # customfirmware
 
-FlipperZero Custom Firmware - 34 Total Apps: Momentum + Community + Advanced + ESP32 + NRF24
+FlipperZero Custom Firmware - 35 Total Apps: Momentum + Community + Advanced + ESP32 + NRF24 + **Wireshark**
 
 ## Overview
 
@@ -10,6 +10,7 @@ The ultimate Flipper Zero firmware with comprehensive app ecosystem:
 - **7 Advanced Hacking Tools** (BLE, WiFi, RF)
 - **6 ESP32 GPIO Tools** (WiFi scanning, BLE, packet capture)
 - **7 NRF24 2.4GHz Tools** (MouseJack, sniffing, jamming)
+- **1 ESP32 Wireshark** ✅ **NEW** - Professional packet capture & analysis
 - **Professional UI Framework** with themes and navigation
 - **Complete Documentation** with legal notices
 
@@ -22,7 +23,7 @@ The ultimate Flipper Zero firmware with comprehensive app ecosystem:
 - Settings management
 - Stack-based navigation
 
-### 34 Integrated Apps
+### 35 Integrated Apps
 
 #### 8 Momentum Official Apps
 1. RFID Explorer
@@ -65,14 +66,23 @@ The ultimate Flipper Zero firmware with comprehensive app ecosystem:
 5. GPIO Controller
 6. Programmer
 
-#### 7 NRF24 2.4GHz Tools ✅ **NEW**
-1. **Channel Scanner** - 2.4GHz activity detection
-2. **Packet Sniffer** - Capture NRF24 packets
-3. **MouseJacker** - Exploit wireless mice/keyboards
-4. **Keyboard Jacker** - Intercept keyboard communications
-5. **Jammer** - 2.4GHz spectrum jammer (RF-shielded only)
-6. **Payload Transmitter** - Custom NRF24 payload crafting
-7. **Address Scanner** - Discover NRF24 addresses
+#### 7 NRF24 2.4GHz Tools
+1. Channel Scanner
+2. Packet Sniffer
+3. MouseJacker
+4. Keyboard Jacker
+5. Jammer
+6. Payload Transmitter
+7. Address Scanner
+
+#### 1 ESP32 Wireshark ✅ **NEW**
+- **Professional Network Capture** - Real-time WiFi/BLE packet capture
+- **Wireshark Compatible** - Export to PCAP format for Wireshark analysis
+- **Multi-Format Export** - PCAP, CSV, JSON export formats
+- **Advanced Filtering** - Channel, MAC, RSSI, packet type filters
+- **Live Statistics** - Real-time packet stats and signal analysis
+- **Buffer Management** - 1,000 packet buffer with overflow handling
+- **Deep Analysis** - Packet-level inspection and metadata extraction
 
 ## Quick Start
 
@@ -89,6 +99,74 @@ make
 1. Connect Flipper Zero via USB
 2. Use qFlipper to transfer binary
 3. Run from Applications menu
+
+## ESP32 Wireshark Features
+
+### Real-Time Packet Capture
+
+✅ **WiFi Packets:**
+- Data frames (TCP/UDP traffic frames)
+- Management frames (auth, assoc, beacon, probe)
+- Deauthentication frames
+- Full 802.11 frame analysis
+- Per-packet RSSI and data rate
+
+✅ **Bluetooth Packets:**
+- BLE advertisements
+- BLE connection data
+- Raw BLE payloads
+- Device discovery
+
+### Export Formats
+
+**PCAP Format (Wireshark Compatible)**
+```bash
+wireshark capture.pcap
+tcpdump -r capture.pcap
+```
+
+**CSV Format (Spreadsheet Ready)**
+```csv
+Number,Time,Source,Destination,Protocol,Length,RSSI,Channel,Type
+1,1234.567,AA:BB:CC:DD:EE:FF,FF:FF:FF:FF:FF:FF,802.11n,256,-45,6,WiFi Data
+```
+
+**JSON Format (Programmatic Analysis)**
+```json
+{
+  "packets": [...],
+  "statistics": {
+    "total_packets": 1000,
+    "wifi_packets": 850,
+    "ble_packets": 150
+  }
+}
+```
+
+### Advanced Filtering
+
+```c
+WiresharkFilter filter = {
+    .capture_wifi_data = true,
+    .capture_wifi_mgmt = false,
+    .capture_ble_adv = true,
+    .min_signal_strength = -60,    // RSSI threshold
+    .target_channel = 6,            // Specific channel
+};
+strcpy(filter.filter_mac, "AA:BB:CC:DD:EE:FF");
+wireshark_set_filter(session, &filter);
+```
+
+### Live Statistics
+
+```c
+WiresharkStats stats = wireshark_get_stats(session);
+- Total packets captured
+- WiFi vs BLE breakdown
+- Signal strength (min/max/avg RSSI)
+- Packet type distribution
+- Dropped packet count
+```
 
 ## NRF24 Hardware Setup
 
@@ -116,6 +194,7 @@ IRQ       | GPIO3 (optional)
 ## Channel Reference
 
 **NRF24 Channels**: 0-125 (2.400-2.525 GHz)
+**WiFi Channels**: 1-13 (2.4GHz), 36-165 (5GHz)
 
 Common channels by device:
 - **Logitech Unifying**: 3, 30, 55, 70 (hops)
@@ -137,41 +216,59 @@ Common channels by device:
 - [APPS.md](docs/APPS.md) - Community apps (20)
 - [ADVANCED_APPS.md](docs/ADVANCED_APPS.md) - Advanced tools & ESP32
 - [NRF24_TOOLS.md](docs/NRF24_TOOLS.md) - NRF24 2.4GHz tools
+- [ESP32_WIRESHARK.md](docs/ESP32_WIRESHARK.md) - **Packet capture & analysis** ✅ **NEW**
 - [MOMENTUM_INTEGRATION.md](docs/MOMENTUM_INTEGRATION.md) - Momentum
 
 ## Usage Examples
 
-### Launch NRF24 Tool
+### ESP32 Wireshark - Basic Capture
 
 ```c
-#include "apps/nrf24_tools.h"
+#include "apps/esp32_wireshark.h"
 
-// Channel scanner
-launch_nrf24_tool(NRF24ToolChannelScanner);
+// Initialize
+WiresharkSession* session = wireshark_init();
+wireshark_start_capture(session);
 
-// MouseJacker
-launch_nrf24_tool(NRF24ToolMouseJacker);
+// Capture for 60 seconds
+furi_delay_ms(60000);
 
-// Find by name
-const NRF24Tool* tool = find_nrf24_tool_by_name("Packet Sniffer");
-if(tool) launch_nrf24_tool(tool->type);
+// Export to Wireshark format
+wireshark_export_pcap(session, "/ext/captures/network.pcap");
+wireshark_export_csv(session, "/ext/captures/network.csv");
+wireshark_export_json(session, "/ext/captures/network.json");
+
+// Get statistics
+WiresharkStats stats = wireshark_get_stats(session);
+furi_log_info("WIRESHARK", "Packets: %ld | WiFi: %ld | BLE: %ld",
+    stats.total_packets, stats.wifi_packets, stats.ble_packets);
+
+wireshark_free(session);
 ```
 
-### Channel Control
+### ESP32 Wireshark - Advanced Filtering
+
+```c
+// Set channel and RSSI filter
+WiresharkFilter filter = {
+    .capture_wifi_data = true,
+    .capture_ble_adv = false,
+    .min_signal_strength = -60,
+    .target_channel = 6,
+};
+wireshark_set_filter(session, &filter);
+```
+
+### NRF24 - Launch Tools
 
 ```c
 #include "apps/nrf24_tools.h"
 
-// Set channel
-nrf24_set_channel(76);
+// Launch channel scanner
+launch_nrf24_tool(NRF24ToolChannelScanner);
 
-// Get current
-uint8_t ch = nrf24_get_channel();
-
-// Check connection
-if(check_nrf24_connection()) {
-    // Module connected
-}
+// Launch packet sniffer
+launch_nrf24_tool(NRF24ToolPacketSniffer);
 ```
 
 ## Safety & Legal
@@ -181,12 +278,14 @@ if(check_nrf24_connection()) {
 - Security research with authorization
 - RF-shielded lab testing
 - Educational purposes
+- Network troubleshooting
 
 ### ❌ Illegal Uses
 - Interfering with others' devices
 - Jamming outside labs
 - Unauthorized attacks
 - Privacy violations
+- Capturing others' traffic without consent
 
 ## ⚠️ NRF24 Jamming
 
@@ -196,8 +295,18 @@ if(check_nrf24_connection()) {
 - Fines up to $100,000+
 - Use ONLY in Faraday cage
 
+## ⚠️ Wireshark/Packet Capture
+
+**Legal Notice:**
+- Only capture traffic on networks you own/have permission to access
+- Do not use to intercept others' communications
+- Comply with all local wiretapping and privacy laws
+- Use for authorized security testing only
+
 ## Resources
 
+- **Wireshark Official**: https://www.wireshark.org/
+- **ESP32 Wireshark Docs**: docs/ESP32_WIRESHARK.md
 - **NRF24 Jammer**: https://github.com/huuck/FlipperZeroNRFJammer
 - **nrf24tool**: https://github.com/OuinOuin74/nrf24tool
 - **Flipper Lab**: https://lab.flipper.net/apps
@@ -235,5 +344,6 @@ This firmware is for educational and authorized use only. Users are responsible 
 - Operating within legal boundaries
 - Obtaining proper authorization
 - Complying with FCC/ETSI guidelines
+- Respecting privacy laws
 
 **Misuse may result in civil and criminal penalties.**
