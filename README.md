@@ -1,47 +1,67 @@
 # customfirmware
 
-FlipperZero Custom Firmware - Advanced UI System with Latest Momentum Apps & 12 Community Apps
+FlipperZero Custom Firmware - Advanced UI System with 20+ Apps Including BLE Spam, ESP32 Tools & Advanced RF
 
 ## Overview
 
-A complete custom UI framework for Flipper Zero firmware with modular view system, configurable themes, intuitive navigation, and integration with:
-- **8 Momentum Official Apps** - Latest firmware tools
-- **12 Community Apps** - Including games, emulators, and utilities
+A complete custom UI framework for Flipper Zero firmware with:
+- **Modern UI Framework** with modular views and themes
+- **20 Community & Momentum Apps**
+- **7 Advanced Hacking/Security Research Tools** (BLE Spam, WiFi, RF)
+- **6 ESP32 Integration Tools** for GPIO-based ESP32 module control
+- **Professional Documentation** and examples
 
 ## Features
 
 ### UI System
-- **Modern UI Framework**: Custom-built interface with consistent styling
-- **Modular View Architecture**: Separate view components (Main, Settings, Apps, System)
-- **Theme Support**: Light and dark themes with customizable colors
-- **Settings Management**: Brightness, sound, vibration, and theme controls
-- **Navigation Stack**: Stack-based view navigation for intuitive flow
+- Modern interface with consistent styling
+- Modular view architecture (Main, Settings, Apps, System)
+- Light and dark themes with customizable colors
+- Settings management (brightness, sound, vibration)
+- Stack-based view navigation
 
-### App Integration
+### Apps Included
 
 #### 8 Momentum Official Apps
-1. **RFID Explorer** - Scan and identify RFID tags
-2. **NFC Tools** - Read/write NFC and automate devices
-3. **Weather Decoder** - Decode weather station signals
-4. **IR Remote** - Infrared remote control emulator
-5. **Sub-GHz Scanner** - Advanced frequency scanning
-6. **Bluetooth Finder** - Identify nearby Bluetooth devices
-7. **Music Player** - Play tunes on your Flipper
-8. **File Manager** - Advanced file navigation
+1. RFID Explorer
+2. NFC Tools
+3. Weather Decoder
+4. IR Remote
+5. Sub-GHz Scanner
+6. Bluetooth Finder
+7. Music Player
+8. File Manager
 
 #### 12 Community Apps
-1. **HabitFlow** - Habit tracker with goals and streaks
-2. **Stratagem Hero** - Helldivers 2-inspired tactical game
-3. **Cell Lab** - Cellular automata simulator
-4. **FlipRogue** - ASCII roguelike RPG
-5. **Trivia Zero** - Bilingual flashcard trivia
-6. **Sub-GHz Chat** - Device-to-device messaging
-7. **Video Player** - Play video files
-8. **Calculator** - Scientific calculator
-9. **Bad USB** - USB keyboard/mouse emulator (Educational)
-10. **WiFi Jammer** - Educational WiFi analyzer
-11. **DemoBoy Simulator** - Game Boy emulator
-12. **Climate Monitor** - Temperature/humidity monitoring
+1. HabitFlow
+2. Stratagem Hero
+3. Cell Lab
+4. FlipRogue
+5. Trivia Zero
+6. Sub-GHz Chat
+7. Video Player
+8. Calculator
+9. Bad USB
+10. WiFi Jammer
+11. DemoBoy Simulator
+12. Climate Monitor
+
+#### 7 Advanced Tools
+1. **BLE Spam** - Bluetooth notification attacks
+2. **ESP32 Marauder** - WiFi & BLE scanning with ESP32 module
+3. **WiFi War Drive** - Map networks with GPS
+4. **BT Beacon Spoof** - Spoof Bluetooth beacons
+5. **RF Signal Analyzer** - Advanced signal analysis
+6. **Deauther** - WiFi deauth testing tool
+7. **Packet Sniffer** - Network packet capture
+
+#### 6 ESP32 Tools (GPIO Control)
+1. WiFi Scanner
+2. BLE Scanner
+3. Packet Capture
+4. Firmware Flasher
+5. GPIO Controller
+6. Programmer
 
 ## Quick Start
 
@@ -60,97 +80,93 @@ make
 ./build/customfirmware_app
 ```
 
-### Deploy to Flipper Zero
+### Deploy
 
-1. Connect device via USB
-2. Use qFlipper to transfer binary
-3. Run from Applications menu
+1. Connect Flipper Zero via USB
+2. Use qFlipper to transfer
+3. Run from Applications
 
-## Architecture
+## App Navigation
 
-### Core Components
-
-- `src/ui/` - UI system and utilities
-- `src/ui/views/` - Individual view implementations
-- `src/apps/` - App launcher and app registry
-- `examples/` - Usage examples
-- `docs/` - Comprehensive documentation
-
-### Views
-
-- **Main View**: Menu-driven primary interface
-- **Settings View**: System configuration options
-- **Apps View**: Application launcher (Momentum + Community tabs)
-- **System View**: System information and controls (planned)
-
-## Navigation
-
-- **UP/DOWN**: Navigate menu items / scroll apps
-- **LEFT/RIGHT**: Adjust settings / switch app tabs
-- **OK**: Select menu item / launch app
-- **BACK**: Return to main menu / exit
+- **UP/DOWN**: Navigate menu items
+- **LEFT/RIGHT**: Switch between app categories (Momentum/Community/Advanced/ESP32)
+- **OK**: Launch selected app
+- **BACK**: Return to previous menu
 
 ## Documentation
 
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - System design and patterns
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - System design
 - [BUILDING.md](docs/BUILDING.md) - Build instructions
-- [API.md](docs/API.md) - Complete API reference
-- [APPS.md](docs/APPS.md) - All 20 apps documentation
-- [MOMENTUM_INTEGRATION.md](docs/MOMENTUM_INTEGRATION.md) - Momentum firmware integration
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
+- [API.md](docs/API.md) - API reference
+- [APPS.md](docs/APPS.md) - Community apps (20 apps)
+- [ADVANCED_APPS.md](docs/ADVANCED_APPS.md) - Advanced tools & ESP32 integration
+- [MOMENTUM_INTEGRATION.md](docs/MOMENTUM_INTEGRATION.md) - Momentum firmware
+- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
 
-## Examples
+## Advanced Apps Usage
 
-### Simple Application
+### Launch BLE Spam
 
 ```c
-#include "ui/ui.h"
+#include "apps/advanced_apps.h"
 
-int main(void) {
-    ui_init();
-    
-    // Use UI utilities
-    UIConfig* config = ui_get_config();
-    config->brightness = 200;
-    ui_set_theme(UIThemeDark);
-    
-    // Your code here
-    
-    ui_deinit();
-    return 0;
+launch_advanced_app(AdvancedAppBLESpam);
+```
+
+### Launch ESP32 Marauder
+
+```c
+#include "apps/advanced_apps.h"
+
+launch_advanced_app(AdvancedAppESP32Marauder);
+```
+
+### Control ESP32 GPIO
+
+```c
+#include "apps/esp32_tools.h"
+
+launch_esp32_tool(ESP32ToolWiFiScanning);
+if(check_esp32_connection()) {
+    // ESP32 connected and ready
 }
 ```
 
-### Launch an App
+## ESP32 Marauder Hardware
 
-```c
-#include "apps/app_launcher.h"
+### GPIO Connection
 
-// Launch Momentum app
-launch_momentum_app(MomentumAppNFCTools);
-
-// Launch community app
-launch_community_app(CommunityAppCalculator);
-
-// Find app by name
-const MomentumApp* app = find_momentum_app_by_name("RFID Explorer");
-const CommunityApp* com_app = find_community_app_by_name("DemoBoy Simulator");
+```
+ESP32 TX  -> Flipper RX (Pin 13)
+ESP32 RX  -> Flipper TX (Pin 12)
+ESP32 GND -> Flipper GND (Pin 8 or 11)
+ESP32 5V  -> Flipper 5V (Pin 1)
 ```
 
-## Momentum Integration
+### Features
+- WiFi network scanning
+- BLE device discovery
+- Packet capture
+- Deauthentication attacks
+- Beacon spoofing
+- Signal strength mapping
 
-CustomFirmware is designed to work seamlessly with Momentum Firmware 012+:
+## ⚠️ Legal Notice
 
-- Full compatibility with Momentum apps
-- Themed to match Momentum aesthetics
-- Supports Momentum asset packs
-- Compatible with JavaScript automation
+All advanced tools are for:
+- **Educational purposes only**
+- **Authorized testing** (networks/devices you own)
+- **Security research** in controlled environments
 
-See [MOMENTUM_INTEGRATION.md](docs/MOMENTUM_INTEGRATION.md) for details.
+**Unauthorized use may violate local laws.**
+
+Users are responsible for:
+- Knowing wireless regulations in their jurisdiction
+- Obtaining proper authorization before testing
+- Complying with FCC/ETSI regulations
+- Respecting privacy and security laws
 
 ## Configuration
-
-UI theme and settings are managed through `UIConfig` structure:
 
 ```c
 UIConfig* config = ui_get_config();
@@ -162,62 +178,53 @@ ui_set_theme(UIThemeDark);
 
 ## Extensibility
 
-### Add New View
+### Add New Advanced App
 
-1. Create `src/ui/views/new_view.h|c`
-2. Implement required functions
-3. Register in view stack in `src/main.c`
+1. Add to enum in `advanced_apps.h`
+2. Add entry to `advanced_apps[]` array
+3. Add case in `launch_advanced_app()` switch
 
-### Add New App
+### Add New ESP32 Tool
 
-1. Add to `MomentumAppType` or `CommunityAppType` enum
-2. Add entry to app registry array
-3. Implement launch logic
+1. Add to enum in `esp32_tools.h`
+2. Add entry to `esp32_tools[]` array
+3. Implement in `esp32_tools.c`
 
 ## CI/CD
 
-Automated builds via GitHub Actions:
-
-- **Linux**: GCC/Clang builds
-- **macOS**: Clang builds
-- **Windows**: MSVC builds
-- **Code Quality**: clang-format validation
+- Automated builds on Linux, macOS, Windows
+- Code quality checks with clang-format
+- GitHub Actions workflows
 
 ## Performance
 
 - Optimized for 128x64 display
 - Minimal memory footprint
-- Efficient button input handling
-- Low power consumption design
+- Efficient GPIO communication
+- Low power consumption
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) file
+MIT License - See [LICENSE](LICENSE)
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Resources
 
 - **Flipper Zero**: https://flipperzero.one/
-- **Momentum Firmware**: https://momentum-fw.dev/
+- **Momentum**: https://momentum-fw.dev/
+- **ESP32 Marauder**: https://github.com/justcallmekoko/ESP32Marauder
+- **BLE Spam**: https://github.com/EvanDebruyne/Flipper-Zero-BLE-Spam
 - **Flipper SDK**: https://github.com/flipperdevices/flipperzero-firmware
-- **Community Apps**: https://github.com/Next-Flip/Momentum-Apps
-- **App Hub**: https://lab.flipper.net/apps/
 
 ## Support
 
-For issues, questions, or suggestions:
-
-1. Check [documentation](docs/)
-2. Search [GitHub Issues](https://github.com/makajorden-netizen/customfirmware/issues)
+1. Check documentation
+2. Search GitHub issues
 3. Create new issue with details
 
 ## Disclaimer
 
-This firmware is for educational purposes and authorized testing only. Users must comply with all applicable laws and regulations in their jurisdiction. All apps are provided for legal use only.
+This firmware is for educational and authorized use only. Users must comply with all applicable laws and regulations. Use responsibly.
