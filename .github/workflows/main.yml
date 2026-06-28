@@ -1,0 +1,31 @@
+git clone https://github.com/flipperdevices/flipperzero-firmware.git temp_fw
+cp -r temp_fw/* .
+rm -rf temp_fw
+
+mkdir -p applications_user/vibe_os
+
+cat > applications_user/vibe_os/vibe_os.c << 'EOF'
+#include <furi.h>
+#include <furi_hal.h>
+#include <gui/gui.h>
+
+int32_t vibe_app_main(void* p) {
+    Gui* gui = furi_record_open("gui");
+    ViewPort* view_port = view_port_alloc();
+    gui_add_view_port(gui, view_port, GuiLayerFullscreen);
+    
+    for(int i = 0; i < 5; i++) {
+        furi_hal_vibro_on(true);
+        furi_delay_ms(50);
+        furi_hal_vibro_on(false);
+        furi_delay_ms(50);
+    }
+    
+    gui_remove_view_port(gui, view_port);
+    view_port_free(view_port);
+    furi_record_close("gui");
+    return 0;
+}
+EOF
+
+./fbt build
