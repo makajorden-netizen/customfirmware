@@ -1,0 +1,9 @@
+App(
+    appid="vibe_os",
+    name="Vibe OS",
+    apptype=AppType.EXTERNAL,
+    entry_point="vibe_app_main",
+    cdefines=["APP_VIBE_OS"],
+    requires=["gui"],
+    stack_size=1 * 1024,
+)
