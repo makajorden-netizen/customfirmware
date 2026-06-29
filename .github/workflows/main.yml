@@ -1,31 +1,30 @@
-git clone https://github.com/flipperdevices/flipperzero-firmware.git temp_fw
-cp -r temp_fw/* .
-rm -rf temp_fw
+name: Build Custom Firmware
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
 
-mkdir -p applications_user/vibe_os
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-cat > applications_user/vibe_os/vibe_os.c << 'EOF'
-#include <furi.h>
-#include <furi_hal.h>
-#include <gui/gui.h>
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-int32_t vibe_app_main(void* p) {
-    Gui* gui = furi_record_open("gui");
-    ViewPort* view_port = view_port_alloc();
-    gui_add_view_port(gui, view_port, GuiLayerFullscreen);
-    
-    for(int i = 0; i < 5; i++) {
-        furi_hal_vibro_on(true);
-        furi_delay_ms(50);
-        furi_hal_vibro_on(false);
-        furi_delay_ms(50);
-    }
-    
-    gui_remove_view_port(gui, view_port);
-    view_port_free(view_port);
-    furi_record_close("gui");
-    return 0;
-}
-EOF
-
-./fbt build
+      - name: Build firmware
+        run: |
+          ./fbt
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-build
+          path: build/latest/
